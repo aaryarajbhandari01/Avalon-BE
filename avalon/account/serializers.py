@@ -44,8 +44,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-
-
 class UserSerializerWithToken(UserDetailSerializer):
 
     token = serializers.SerializerMethodField(read_only=True)

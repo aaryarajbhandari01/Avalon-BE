@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from order.models import Order, OrderItem
+# from order.models import Order, OrderItem
 
 from .filters import CategoryFilterBackend, SizeFilterBackend
 from .models import Cart, Product, ProductReview, Wishlist
@@ -169,20 +169,20 @@ class ReviewCreateView(APIView):
         product = Product.objects.get(id=request.data.get("product_id"))
         user = request.user
 
-        if Product.objects.filter(
-            order_item__order__user=user,
-            order_item__order__delivery_status="DELIVERED",
-            id=product.id,
-        ).exists():
-            review = ProductReview.objects.create(
+        # if Product.objects.filter(
+        #     order_item__order__user=user,
+        #     order_item__order__delivery_status="DELIVERED",
+        #     id=product.id,
+        # ).exists():
+        review = ProductReview.objects.create(
                 user=user, product=product, review=review
             )
-            serializer = self.serializer_class(review)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(
-            {"message": "You have not purchased this product."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+        serializer = self.serializer_class(review)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # return Response(
+        #     {"message": "You have not purchased this product."},
+        #     status=status.HTTP_400_BAD_REQUEST,
+        # )
 
 
 class ReviewDeleteView(APIView):

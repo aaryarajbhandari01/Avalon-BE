@@ -1,9 +1,9 @@
-from rest_framework.generics import CreateAPIView, RetrieveAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth.models import User
 
-from .serializers import UserDetailSerializer, UserRegisterSerializer
+from .serializers import UserDetailSerializer, UserRegisterSerializer,  UserSerializerWithToken
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
