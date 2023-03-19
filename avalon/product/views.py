@@ -160,29 +160,49 @@ class CartDeleteView(APIView):
 # ---------------------------------------------
 
 
+# class ReviewCreateView(APIView):
+#     serializer_class = ProductReviewSerializer
+#     permission_classes = [IsAuthenticated]
+
+#     def post(self, request):
+#         review = request.data.get("review")
+#         product = Product.objects.get(id=request.data.get("product_id"))
+#         user = request.user
+
+#         # if Product.objects.filter(
+#         #     order_item__order__user=user,
+#         #     order_item__order__delivery_status="DELIVERED",
+#         #     id=product.id,
+#         # ).exists():
+#         review = ProductReview.objects.create(
+#                 user=user, product=product, review=review
+#             )
+#         serializer = self.serializer_class(review)
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         # return Response(
+#         #     {"message": "You have not purchased this product."},
+#         #     status=status.HTTP_400_BAD_REQUEST,
+#         # )
 class ReviewCreateView(APIView):
     serializer_class = ProductReviewSerializer
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        product_id = request.data.get("product")
         review = request.data.get("review")
-        product = Product.objects.get(id=request.data.get("product_id"))
         user = request.user
 
-        # if Product.objects.filter(
-        #     order_item__order__user=user,
-        #     order_item__order__delivery_status="DELIVERED",
-        #     id=product.id,
-        # ).exists():
-        review = ProductReview.objects.create(
-                user=user, product=product, review=review
+        if Product.objects.filter(id=product_id).exists():
+            review = ProductReview.objects.create(
+                user=user, product_id=product_id, review=review
             )
-        serializer = self.serializer_class(review)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-        # return Response(
-        #     {"message": "You have not purchased this product."},
-        #     status=status.HTTP_400_BAD_REQUEST,
-        # )
+            serializer = self.serializer_class(review)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(
+                {"message": "Product does not exist."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
 
 class ReviewDeleteView(APIView):
