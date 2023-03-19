@@ -34,8 +34,9 @@ class ShippingDetails(TimestampAbstractModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     address = models.CharField(max_length=100)
     city = models.CharField(max_length=50)
-    province = models.CharField(max_length=50, choices=PROVINCE_CHOICES)
-    phone = models.CharField(max_length=10)
+    province = models.CharField(max_length=50)
+    # province = models.CharField(max_length=50, choices=PROVINCE_CHOICES)
+    phone = models.CharField(max_length=10)#, primary_key=True
 
     def __str__(self):
         return f"{self.user.username} - {self.address} - {self.city} - {self.province} - {self.phone}"

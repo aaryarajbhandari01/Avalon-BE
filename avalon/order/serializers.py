@@ -91,10 +91,31 @@ class CouponSerializer(serializers.ModelSerializer):
         fields = ["id", "code", "discount_percent", "is_active"]
 
 
+# class CheckoutInputSerializer(serializers.Serializer):
+#     shipping_id = serializers.IntegerField()
+#     coupon_code = serializers.CharField(required=False)
+#     cart_items = serializers.ListField(child=serializers.IntegerField(), required=True)
+
 class CheckoutInputSerializer(serializers.Serializer):
-    shipping_id = serializers.IntegerField()
-    coupon_code = serializers.CharField(required=False)
-    cart_items = serializers.ListField(child=serializers.IntegerField(), required=True)
+    # shipping_id = serializers.CharField(max_length=25)
+    shipping_address = serializers.DictField(
+        child=serializers.CharField(max_length=255), required=True
+    )
+    cart_items = serializers.ListField(
+        child=serializers.DictField(
+            child=serializers.CharField(max_length=255), required=True
+        ),
+        required=True,
+    )
+    coupon_code = serializers.CharField(required=False, allow_blank=True)
+    payment_method = serializers.ChoiceField(
+        choices=["CashOnDelivery", "Khalti"], required=True
+    )
+    shipping_price = serializers.DecimalField(
+        max_digits=6, decimal_places=2, required=True
+    )
+    total_amount = serializers.IntegerField()
+    discount_amount = serializers.IntegerField()
 
 class PaymentInputSerializer(serializers.Serializer):
     payment_id = serializers.CharField()

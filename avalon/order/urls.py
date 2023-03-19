@@ -4,6 +4,7 @@ from .views import (CheckOutView, ConfirmKhaltiPaymentView, CouponCheckView,
                     OrderListView, PaymentView, ShippingDetailsCreateView,
                     ShippingDetailsDeleteView, ShippingDetailsListView,
                     ShippingDetailsUpdateView,
+                    placeOrder
                     # CheckCouponAPIView
                     )
 
@@ -11,7 +12,10 @@ app_name = "order"
 
 urlpatterns = [
     path("checkout/", CheckOutView.as_view(), name="checkout"),
+    # path("checkout/", placeOrder, name="checkout"),
     path("coupon-check/", CouponCheckView.as_view(), name="coupon_check"),
+    # path("placeOrder/", placeOrder, name="checkout"),
+
 
     # path("coupons/", CheckCouponAPIView.as_view(), name="coupon"),
     
