@@ -323,9 +323,9 @@ class CheckOutView(APIView):
        
        
         try:
-            shipping_details = ShippingDetails.objects.get(
+            shipping_details = ShippingDetails.objects.filter(
                 phone=input_serializer.validated_data["shipping_address"]["shipping_id"], user=request.user
-            )
+            ).first()
         except ShippingDetails.DoesNotExist:
             shipping_details = None
         
