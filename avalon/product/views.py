@@ -75,9 +75,22 @@ class WishlistDeleteView(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, pk):
-        Wishlist.objects.filter(user=request.user, id=pk).delete()
-        return Response({"message": "Product removed from wishlist"})
+       
+        # Wishlist.objects.filter(user=request.user, id=pk).delete()
+        # return Response({"message": "Product removed from wishlist"})
 
+        # deleted = Wishlist.objects.filter(user=request.user, id=pk).delete()
+        # if deleted:
+        #     return Response({"message": "Product removed from wishlist"})
+        # else:
+        #     return Response({"message": "Product not found in wishlist"})
+
+        wishlist_item = Wishlist.objects.filter(user=request.user, product_id=pk)
+        if wishlist_item.exists():
+            wishlist_item.delete()
+            return Response({"message": "Product removed from wishlist"})
+        else:
+            return Response({"message": "Product is not in wishlist"})
 
 # ---------------------------------------------
 # Cart Views
