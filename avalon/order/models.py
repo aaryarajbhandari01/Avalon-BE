@@ -22,20 +22,11 @@ class Coupon(TimestampAbstractModel):
 
 
 class ShippingDetails(TimestampAbstractModel):
-    PROVINCE_CHOICES = (
-        ("P1", "Province 1"),
-        ("MP", "Madhesh Pradesh"),
-        ("BG", "Bagmati"),
-        ("GK", "Gandaki"),
-        ("LB", "Lumbini"),
-        ("KR", "Karnali"),
-        ("SP", "Sudurpashchim"),
-    )
+   
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     address = models.CharField(max_length=100)
     city = models.CharField(max_length=50)
     province = models.CharField(max_length=50)
-    # province = models.CharField(max_length=50, choices=PROVINCE_CHOICES)
     phone = models.CharField(max_length=10)#, primary_key=True
 
     def __str__(self):
@@ -65,6 +56,7 @@ class Order(TimestampAbstractModel):
     total_amount = models.IntegerField()
     discount_amount = models.IntegerField()
     final_amount = models.IntegerField()
+
 
     order_status = models.CharField(
         max_length=50, choices=ORDER_STATUS_CHOICES, default="PENDING"

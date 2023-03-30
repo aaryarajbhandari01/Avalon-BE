@@ -420,10 +420,14 @@ class PaymentView(APIView):
         if payment_method == "KHALTI":
             payment.payment_method = "KHALTI"
             response = initiate_payment(amount=payment.amount, purchase_order_id=order.id, purchase_order_name=f"Order {order.id}")
-            if "pidx" in response:
-                payment.pidx = response["pidx"]
+            # if "pidx" in response:
+            #     payment.pidx = response["pidx"]
+            #     payment.save()
+            #     return Response(response, status=status.HTTP_200_OK)
+            if "token" in response:
+                payment.payment_id = response["token"]
                 payment.save()
-                return Response(response, status=status.HTTP_200_OK)
+                return Response({"url": response["redirect_url"]}, status=status.HTTP_200_OK)
 
         elif payment_method == "COD":
             payment.payment_method = "COD"
@@ -441,9 +445,11 @@ class ConfirmKhaltiPaymentView(APIView):
 
     @transaction.atomic
     def get(self, request):
-        pidx = request.query_params.get("pidx")
+        # pidx = request.query_params.get("pidx")
+        token = request.query_params.get("token")
 
-        payment = Payment.objects.select_related("order").filter(pidx=pidx).first()
+        # payment = Payment.objects.select_related("order").filter(pidx=pidx).first()
+        payment = Payment.objects.select_related("order").filter(payment_id=token).first()
         if not payment:
             return Response({"message": "Payment unsuccessful. Invalid PIDX"}, status=status.HTTP_400_BAD_REQUEST)
         
