@@ -26,8 +26,8 @@ class PaymentSerializer(serializers.ModelSerializer):
         extra_kwargs = {"amount": {"read_only": True},
                          "user": {"read_only": True}, 
                          "order": {"read_only": True}, 
-                         "payment_id": {"read_only": True, "required": False},
-                        "payment_method": {"read_only": True, "required": False}}
+                         "payment_id": {"required": False},#"read_only": True, 
+                        "payment_method": { "required": False}} #"read_only": True
 
 
 
@@ -72,7 +72,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     shipping_details = ShippingDetailsSerializer(required=False)
     order_items = OrderItemSerializer(many=True, required=False)
-    payment = PaymentSerializer(many=False, read_only=True)
+    payment = PaymentSerializer(many=False) #, read_only=True
 
     class Meta:
         model = Order
@@ -111,7 +111,7 @@ class CheckoutInputSerializer(serializers.Serializer):
         ),
         required=True,
     )
-    coupon_code = serializers.CharField(required=False, allow_blank=True)
+    coupon_code = serializers.CharField(required=False)
     payment_method = serializers.ChoiceField(
         choices=["COD", "KHALTI"], required=True
     )

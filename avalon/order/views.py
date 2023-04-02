@@ -328,7 +328,6 @@ class CheckOutView(APIView):
             ).first()
         except ShippingDetails.DoesNotExist:
             shipping_details = None
-        
         if shipping_details is None:
             raise ValidationError(detail="Invalid or missing shipping details.")
 
@@ -340,6 +339,8 @@ class CheckOutView(APIView):
                 raise ValidationError(detail="Coupon code invalid.")
         except Coupon.DoesNotExist:
             raise ValidationError(detail="Coupon not found.")
+
+        
 
 
         # total_amount = sum(float(item["price"]) * item["quantity"] for item in cart_items)
@@ -388,7 +389,23 @@ class CheckOutView(APIView):
             )
 
         OrderItem.objects.bulk_create(order_items)
-        Payment.objects.create(order=order, amount=final_amount, user=request.user)
+        
+        payment = Payment.objects.create(
+            user=request.user,
+            order=order,
+            payment_method=input_serializer.validated_data['payment_method'],
+            payment_id=input_serializer.validated_data.get('payment_id', ''),
+            amount=order.final_amount,
+        )
+        payment.save()
+        # Payment.objects.create(order=order, amount=final_amount, user=request.user)
+        if payment.payment_method == 'KHALTI':
+            payment.confirmed=True
+            order.order_status = 'CONFIRMED'
+            order.save()
+            payment.save()
+
+
 
         output_serializer = self.output_serializer_class(order)
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)

@@ -80,7 +80,7 @@ class Payment(TimestampAbstractModel):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name="payment", on_delete=models.CASCADE
     )
-    payment_method = models.CharField(choices=PAYMENT_METHOD_CHOICES, max_length=50)
+    payment_method = models.CharField(max_length=50)#choices=PAYMENT_METHOD_CHOICES, 
     payment_id = models.CharField(max_length=50, null=True, blank=True)
     order = models.ForeignKey(Order, related_name="payment", on_delete=models.CASCADE)
     confirmed = models.BooleanField(default=False)
